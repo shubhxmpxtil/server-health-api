@@ -11,9 +11,10 @@ RUN --mount=type=secret,id=corp_ca \
 # ---------- Stage 2: runtime ----------
 FROM docker.io/library/python:3.12-slim
 
+ARG APP_VERSION=dev
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    APP_VERSION=dev
+    APP_VERSION=${APP_VERSION}
 
 RUN useradd --create-home --uid 10001 appuser
 
