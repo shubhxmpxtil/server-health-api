@@ -20,3 +20,10 @@ def test_metrics_endpoint():
     resp = client.get("/metrics")
     assert resp.status_code == 200
     assert b"app_requests_total" in resp.data
+
+
+def test_version():
+    client = app.test_client()
+    resp = client.get("/version")
+    assert resp.status_code == 200
+    assert "version" in resp.get_json()
