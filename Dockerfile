@@ -16,7 +16,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     APP_VERSION=${APP_VERSION}
 
-RUN useradd --create-home --uid 10001 appuser
+RUN apt-get update \
+ && apt-get upgrade -y \
+ && rm -rf /var/lib/apt/lists/* \
+ && useradd --create-home --uid 10001 appuser
 
 WORKDIR /app
 
