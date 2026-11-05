@@ -1,0 +1,42 @@
+- name: Configure DevOps lab server
+  hosts: lab
+  become: true
+
+  tasks:
+    - name: Install base packages
+      ansible.builtin.dnf:
+        name: "{{ base_packages }}"
+        state: present
+
+    - name: Ensure app user exists and can sudo
+      ansible.builtin.user:
+        name: "{{ app_user }}"
+        groups: wheel
+        append: true
+        shell: /bin/bash
+        create_home: true
+
+    - name: Enable systemd linger for app user (rootless containers)
+      ansible.builtin.command: loginctl enable-linger {{ app_user }}
+      args:
+        creates: "/var/lib/systemd/linger/{{ app_user }}"
+
+    - name: Kernel settings for container networking
+      ansible.builtin.copy:
+        dest: /etc/sysctl.d/90-devops-lab.conf
+        content: |
+          {% for key, value in sysctl_settings.items() %}
+          {{ key }} = {{ value }}
+          {% endfor %}
+        mode: "0644"
+      notify: Reload sysctl
+
+    - name: Login banner
+      ansible.builtin.template:
+        src: templates/motd.j2
+        dest: /etc/motd
+        mode: "0644"
+
+  handlers:
+    - name: Reload sysctl
+      ansible.builtin.command: sysctl --system
