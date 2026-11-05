@@ -1,0 +1,12 @@
+base_packages:
+  - git
+  - vim
+  - jq
+  - curl
+  - tar
+  - podman
+
+app_user: devops
+
+sysctl_settings:
+  net.ipv4.ip_forward: 1
