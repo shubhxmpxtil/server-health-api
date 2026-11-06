@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: server-health-api
+  namespace: sha
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: sha.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: server-health-api
+                port:
+                  name: http
