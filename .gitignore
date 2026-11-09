@@ -4,3 +4,9 @@ __pycache__/
 .pytest_cache/
 *.log
 .env
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
